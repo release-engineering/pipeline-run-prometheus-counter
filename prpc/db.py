@@ -50,10 +50,10 @@ class DBConnection:
         cursor = self.connection.cursor()
         cursor.execute("SELECT name, success, failure FROM pipelineRuns")
         results = cursor.fetchall()
-        rv = {}
-        for name, success, failure in results:
-            rv[name] = {"success": success, "failure": failure}
-        return rv
+        return {
+            name: {"success": success, "failure": failure}
+            for name, success, failure in results
+        }
 
     def add_pipeline_run(self, name, success):
         """
