@@ -19,7 +19,7 @@ jobs:
       - name: Install Tox
         run: pip install tox
       - name: Run Tox
-        run: tox -e black,flake8
+        run: tox -e black,flake8,safety
 
   unit-tests:
     runs-on: ubuntu-latest
