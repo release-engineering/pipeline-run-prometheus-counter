@@ -1,5 +1,8 @@
 # Pipeline Run Prometheus Counter
 
+![GitHub Actions](https://github.com/release-engineering/pipeline-run-prometheus-counter/actions/workflows/tests.yml/badge.svg)
+[![Docker Repository on Quay](https://quay.io/repository/factory2/pipeline-run-prometheus-counter/status "Docker Repository on Quay")](https://quay.io/repository/factory2/pipeline-run-prometheus-counter)
+
 Expose counter metrics for various pipeline runs for the Prometheus text format.
 
 This is useful if you have a pipeline such as Tekton or Jenkins and you need
