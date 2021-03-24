@@ -50,6 +50,35 @@ def test_add_pipeline_run(success, client, db):
     }
 
 
+@pytest.mark.parametrize("authorization", ("", "Bearer my_token", "PRPC my_token"))
+def test_add_pipeline_run_unauthorized(authorization, app, client, db):
+    app.config["PRPC_PSK"] = "L3tM3!n"
+    assert db.get_pipeline_runs_count() == {}
+
+    response = client.post(
+        "/metrics",
+        json={"name": "car_factory", "success": True},
+        headers={"Authorization": authorization},
+    )
+
+    assert response.status_code == 401
+    assert db.get_pipeline_runs_count() == {}
+
+
+def test_add_pipeline_run_authorized(app, client, db):
+    app.config["PRPC_PSK"] = "L3tM3!n"
+    assert db.get_pipeline_runs_count() == {}
+
+    response = client.post(
+        "/metrics",
+        json={"name": "car_factory", "success": True},
+        headers={"Authorization": "PRPC L3tM3!n"},
+    )
+
+    assert response.status_code == 201
+    assert db.get_pipeline_runs_count() == {"car_factory": {"failure": 0, "success": 1}}
+
+
 @pytest.mark.parametrize(
     "payload, error",
     (

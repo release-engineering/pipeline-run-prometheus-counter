@@ -32,11 +32,17 @@ the `name` and `success` properties. For example:
 }
 ```
 
+When authentication is enabled, you must also pass in the header
+`Authorization: PRPC <pre-shared key>` (excluding the `<` and `>`).
+
 ## Configuration
 
 The path to the SQLite database is configured by the `PRPC_DB_PATH`
 environment variable. This defaults to `prpc.db` in the current directory of
 execution.
+
+To enable authentication based on a pre-shared key, you may set the `PRPC_PSK` environment
+variable with the desired pre-shared key.
 
 ## Dependency Management
 

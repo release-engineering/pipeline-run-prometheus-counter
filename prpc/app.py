@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 import os
+import re
 import textwrap
 
 import flask
@@ -26,6 +27,8 @@ def create_app():
         current_dir = os.path.abspath(os.path.curdir)
         db_path = os.path.join(current_dir, "prpc.db")
     app.config["PRPC_DB_PATH"] = os.environ.get("PRPC_DB_PATH", db_path)
+    # Pre-shared key for authentication. Omit this value if authentication should be disabled.
+    app.config["PRPC_PSK"] = os.environ.get("PRPC_PSK")
     app.register_blueprint(metrics_bp)
 
     for code in werkzeug.exceptions.default_exceptions.keys():
@@ -67,6 +70,20 @@ def metrics():
 @metrics_bp.route("/metrics", methods=["POST"])
 def add_pipeline_run():
     """Add a pipeline run."""
+    if flask.current_app.config["PRPC_PSK"]:
+        failure_msg = (
+            'The Authorization header must be provided in the format of "PRPC <pre-shared key>"'
+        )
+        authz = flask.request.headers.get("Authorization")
+        if not authz:
+            raise werkzeug.exceptions.Unauthorized(failure_msg)
+        if not re.match(r"PRPC .+", authz):
+            raise werkzeug.exceptions.Unauthorized(failure_msg)
+
+        psk = authz.split(" ", 1)[1]
+        if psk != flask.current_app.config["PRPC_PSK"]:
+            raise werkzeug.exceptions.Unauthorized("The provided pre-shared key is incorrect")
+
     payload = flask.request.get_json(force=True)
     if not isinstance(payload, dict):
         raise prpc.errors.ValidationError("The input must be a JSON object")
