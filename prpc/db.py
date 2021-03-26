@@ -48,7 +48,7 @@ class DBConnection:
         :rtype: dict
         """
         cursor = self.connection.cursor()
-        cursor.execute("SELECT name, success, failure FROM pipelineRuns")
+        cursor.execute("SELECT name, success, failure FROM pipelineRuns ORDER BY name")
         results = cursor.fetchall()
         return {
             name: {"success": success, "failure": failure} for name, success, failure in results
