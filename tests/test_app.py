@@ -20,11 +20,11 @@ def test_get_metrics(client, db):
         """\
         # HELP car_factory_pipeline_run_total The total number of car_factory pipeline runs.
         # TYPE car_factory_pipeline_run_total counter
-        car_factory_pipeline_run_total{status="success"} = 1
+        car_factory_pipeline_run_total{status="success"} 1
         car_factory_pipeline_run_total{status="failure"} 1
         # HELP truck_factory_pipeline_run_total The total number of truck_factory pipeline runs.
         # TYPE truck_factory_pipeline_run_total counter
-        truck_factory_pipeline_run_total{status="success"} = 2
+        truck_factory_pipeline_run_total{status="success"} 2
         truck_factory_pipeline_run_total{status="failure"} 0
         """
     )
