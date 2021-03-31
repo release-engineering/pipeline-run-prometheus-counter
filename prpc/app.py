@@ -60,7 +60,7 @@ def metrics():
             f"""\
             # HELP {name}_pipeline_run_total The total number of {name} pipeline runs.
             # TYPE {name}_pipeline_run_total counter
-            {name}_pipeline_run_total{{status="success"}} = {pipline_runs["success"]}
+            {name}_pipeline_run_total{{status="success"}} {pipline_runs["success"]}
             {name}_pipeline_run_total{{status="failure"}} {pipline_runs["failure"]}
             """
         )
